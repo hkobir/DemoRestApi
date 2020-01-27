@@ -8,9 +8,11 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.hk.demoapiuser.API.RetrofitClient;
 import com.hk.demoapiuser.API.RetrofitInterface;
 import com.hk.demoapiuser.databinding.ActivityMainBinding;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         //when has no error
 
 
-        Call<ResponseBody> call = retrofitInterface.createUser(
+        Call<ResponseBody> call = RetrofitClient.getInstance().getApi().createUser(
                 binding.emailEt.getText().toString(),
                 binding.passwordEt.getText().toString(),
                 binding.nameEt.getText().toString(),
@@ -83,11 +85,21 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toast.makeText(MainActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
+                String s = "";
+                try {
+                    s = response.body().string();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(MainActivity.this, "" + s, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
