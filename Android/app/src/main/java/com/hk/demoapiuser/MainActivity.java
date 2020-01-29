@@ -3,6 +3,7 @@ package com.hk.demoapiuser;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -22,12 +23,16 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    private RetrofitInterface retrofitInterface;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+
+        dialog = new ProgressDialog(MainActivity.this);
+        dialog.setMessage("Please wait...");
 
         binding.signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void userSignUp() {
+
         if (binding.emailEt.getText().toString().equals("")) {
             binding.emailEt.setError("Required email");
             binding.emailEt.requestFocus();
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         //when has no error
 
-
+        dialog.show();
         Call<ResponseBody> call = RetrofitClient.getInstance().getApi().createUser(
                 binding.emailEt.getText().toString(),
                 binding.passwordEt.getText().toString(),
@@ -94,12 +100,14 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 Toast.makeText(MainActivity.this, "" + s, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
 
             }
         });

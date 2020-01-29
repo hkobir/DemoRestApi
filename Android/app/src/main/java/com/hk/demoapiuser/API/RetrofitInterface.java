@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 public interface RetrofitInterface {
     //insert data using post annotation
     @FormUrlEncoded
-    @POST("createuser/")
+    @POST("createuser")
     Call<ResponseBody> createUser(
             @Field("email") String email,
             @Field("password") String password,
