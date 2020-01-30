@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 import com.hk.demoapiuser.API.RetrofitClient;
 import com.hk.demoapiuser.API.RetrofitInterface;
 import com.hk.demoapiuser.databinding.ActivityMainBinding;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -39,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userSignUp();
 
+            }
+        });
+        binding.loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
             }
         });
     }
@@ -82,32 +92,31 @@ public class MainActivity extends AppCompatActivity {
         //when has no error
 
         dialog.show();
-        Call<ResponseBody> call = RetrofitClient.getInstance().getApi().createUser(
+        Call<DefaultResponse> call = RetrofitClient.getInstance().getApi().createUser(
                 binding.emailEt.getText().toString(),
                 binding.passwordEt.getText().toString(),
                 binding.nameEt.getText().toString(),
                 binding.schoolEt.getText().toString()
         );
-        call.enqueue(new Callback<ResponseBody>() {
+
+        call.enqueue(new Callback<DefaultResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                //Toast.makeText(MainActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
-                String s = "";
-                try {
-                    s = response.body().string();
+            public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                if(response.code()==201){
+                    DefaultResponse defaultResponse =response.body();
+                    Toast.makeText(MainActivity.this, ""+defaultResponse.getMsg(), Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-                Toast.makeText(MainActivity.this, "" + s, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                else if(response.code()==422){
+                    Toast.makeText(MainActivity.this, "user already exist!", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
 
+                }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+            public void onFailure(Call<DefaultResponse> call, Throwable t) {
 
             }
         });
