@@ -1,4 +1,4 @@
-package com.hk.demoapiuser;
+package com.hk.demoapiuser.ModelClass;
 
 import com.google.gson.annotations.SerializedName;
 

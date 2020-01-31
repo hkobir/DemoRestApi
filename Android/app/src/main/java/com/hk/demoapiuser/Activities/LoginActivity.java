@@ -1,16 +1,20 @@
-package com.hk.demoapiuser;
+package com.hk.demoapiuser.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
 import com.hk.demoapiuser.API.RetrofitClient;
+import com.hk.demoapiuser.ModelClass.LoginResponse;
+import com.hk.demoapiuser.R;
+import com.hk.demoapiuser.Storage.SharedPrefferenceManager;
 import com.hk.demoapiuser.databinding.ActivityLoginBinding;
 
 import retrofit2.Call;
@@ -83,6 +87,10 @@ public class LoginActivity extends AppCompatActivity {
                 LoginResponse loginResponse = response.body();
                 if (!loginResponse.getErr()) {
                     //save user and go profile
+                    SharedPrefferenceManager.getInstance(LoginActivity.this).saveUser(loginResponse.getUser());
+                    Intent intent =new Intent(LoginActivity.this,HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
 
                     Toast.makeText(LoginActivity.this, "" + loginResponse.getMsg(), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
@@ -100,5 +108,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(SharedPrefferenceManager.getInstance(LoginActivity.this).isLogIn()){
+            Intent intent =new Intent(LoginActivity.this,HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 }

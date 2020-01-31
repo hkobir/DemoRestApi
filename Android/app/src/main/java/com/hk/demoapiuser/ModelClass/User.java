@@ -1,4 +1,4 @@
-package com.hk.demoapiuser;
+package com.hk.demoapiuser.ModelClass;
 
 public class User {
     private int id;

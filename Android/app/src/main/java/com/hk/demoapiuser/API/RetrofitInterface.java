@@ -1,9 +1,8 @@
 package com.hk.demoapiuser.API;
 
-import com.hk.demoapiuser.DefaultResponse;
-import com.hk.demoapiuser.LoginResponse;
+import com.hk.demoapiuser.ModelClass.DefaultResponse;
+import com.hk.demoapiuser.ModelClass.LoginResponse;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

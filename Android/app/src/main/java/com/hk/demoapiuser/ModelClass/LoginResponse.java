@@ -1,6 +1,7 @@
-package com.hk.demoapiuser;
+package com.hk.demoapiuser.ModelClass;
 
 import com.google.gson.annotations.SerializedName;
+import com.hk.demoapiuser.ModelClass.User;
 
 public class LoginResponse {
     @SerializedName("error")

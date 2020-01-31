@@ -1,4 +1,4 @@
-package com.hk.demoapiuser;
+package com.hk.demoapiuser.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -11,16 +11,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hk.demoapiuser.API.RetrofitClient;
-import com.hk.demoapiuser.API.RetrofitInterface;
+import com.hk.demoapiuser.ModelClass.DefaultResponse;
+import com.hk.demoapiuser.R;
+import com.hk.demoapiuser.Storage.SharedPrefferenceManager;
 import com.hk.demoapiuser.databinding.ActivityMainBinding;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.regex.Pattern;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -122,5 +117,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(SharedPrefferenceManager.getInstance(MainActivity.this).isLogIn()){
+            Intent intent =new Intent(MainActivity.this,HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 }
